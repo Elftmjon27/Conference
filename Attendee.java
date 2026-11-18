@@ -1,9 +1,10 @@
-// Class that defines attendee objects
+// Class that defines attendee objects, based on names.csv format
 public class Attendee {
     private int rank;
     private String lastName;
     private String firstName;
     private int companyNum;
+    private int tableNum; // numbered table attendee is at
 
     // line is intended to be a line from names.csv, assumes line isn't null
     public Attendee(String line) {
@@ -25,5 +26,13 @@ public class Attendee {
 
     public int getCompanyNum() {
         return companyNum;
+    }
+
+    public void setTableNum(int n) {
+        tableNum = n;
+    }
+
+    public int getTableNum() {
+        return tableNum;
     }
 }
