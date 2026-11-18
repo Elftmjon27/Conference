@@ -3,6 +3,8 @@ import java.io.*;
 import java.util.Scanner;
 public class Planner {
     private int totalTables; // number of tables
+    private Table[] tableList; // references to all tables
+    
     private int totalSeatsPerTable; // number of seats per table
     private int companyLimit; // maximum amount of peolpe from the same company allowed at a table
     private int totalSeats;
@@ -20,7 +22,9 @@ public class Planner {
         totalSeats = tableAmount * SeatsPerTableAmount;
         allPeople = new Attendee[totalSeats]; // one person to one seat
         allCompanies = new String[totalSeats]; // if every company sends one person, then # of companies = # of seats
+        tableList= new Table[totalTables]; // total number of table need that amount of tables
 
+        // creates list of people attending who have already registered
         int temp = createPeopleList();
         if (temp == 0) {
             System.out.println("Can't find list of people, unable to make table arrangement");
@@ -30,9 +34,15 @@ public class Planner {
             return;
         }
 
+        // creates list of companies
         if (!createCompaniesList()) {
             System.out.println("Can't find list of companies, unable to make table arrangement");
             return;
+        }
+
+        // creates table objects
+        for (int i = 0; i < totalTables; i++) {
+            tableList[i] = new Table(totalSeatsPerTable);
         }
 
         navigation(new Scanner(System.in));
