@@ -31,6 +31,16 @@ public class Table {
         return output;
     }
 
+    // returns whether the table has someone called name
+    public boolean hasPerson(String name) {
+        for (int i = 0; i < totalPeople; i++) {
+            if (people[i].getFullName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // returns who is sitting at the table
     public String allPeople() {
         String names = "";

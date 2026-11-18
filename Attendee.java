@@ -12,7 +12,7 @@ public class Attendee {
         lastName = words[1];
         firstName = words[2];
         companyNum = Integer.parseInt(words[3]);
-        // System.out.println("Added " + firstName + " " + lastName);
+        //System.out.println("Added " + firstName + " " + lastName);
     }
 
     public int getRank() {
