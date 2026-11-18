@@ -30,19 +30,24 @@ public class Planner {
             return;
         }
 
+        if (!createCompaniesList()) {
+            System.out.println("Can't find list of companies, unable to make table arrangement");
+            return;
+        }
+
         navigation(new Scanner(System.in));
     }
 
     // fills out allPeople array with all attendees in names.csv
+    // returns 0 if can't find file, 1 if too many people, and 2 if successfully created list
     private int createPeopleList() {
         File list = new File("names.csv");
         try {
             Scanner scanName = new Scanner(list);
-            int totalSpots = totalTables * totalSeatsPerTable;
 
             while(scanName.hasNext()) {
                 totalPeople++;
-                if (totalPeople == totalSpots) {
+                if (totalPeople == totalSeats) {
                     return 1;
                 }
                 allPeople[totalPeople - 1] = new Attendee(scanName.nextLine());
@@ -52,6 +57,36 @@ public class Planner {
         } catch (FileNotFoundException e) {
             return 0;
         }
+    }
+
+    // fills out allCompanies array with all companies with people attending, companies in companies.csv
+    // returns true if found companies.csv and successfully created list, false if couldn't find it
+    private boolean createCompaniesList() {
+        File list = new File("companies.csv");
+        try {
+            Scanner scanComp = new Scanner(list);
+            
+            String[] text;
+            while(scanComp.hasNext()) {
+                text = scanComp.nextLine().split(",");
+                allCompanies[totalCompanies] = text[1];
+                totalCompanies++;
+            }
+            return true;
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+    }
+
+    // check whether company c already has someone them from attending, adds company to list if not already
+    private void newCompanyCheck(String c) {
+        for (int i = 0; i < totalCompanies; i++) {
+            if (allCompanies[i].equals(c)) {
+                return;
+            }
+        }
+        allCompanies[totalCompanies] = c;
+        totalCompanies++;
     }
 
     private void navigation(Scanner sc) {
