@@ -19,7 +19,7 @@ public class Planner {
         companyLimit = limit;
         totalSeats = tableAmount * SeatsPerTableAmount;
         allPeople = new Attendee[totalSeats]; // one person to one seat
-        totalCompanies = new String[totalSeats]; // if every company sends one person, then # of companies = # of seats
+        allCompanies = new String[totalSeats]; // if every company sends one person, then # of companies = # of seats
 
         int temp = createPeopleList();
         if (temp == 0) {
@@ -78,23 +78,17 @@ public class Planner {
         }
     }
 
-    // check whether company c already has someone them from attending, adds company to list if not already
-    private void newCompanyCheck(String c) {
-        for (int i = 0; i < totalCompanies; i++) {
-            if (allCompanies[i].equals(c)) {
-                return;
-            }
-        }
-        allCompanies[totalCompanies] = c;
-        totalCompanies++;
-    }
 
     private void navigation(Scanner sc) {
         if (getUserInput(sc)) {
             addPerson(sc);
         } else {
-
+            if (!generateTableArrangement()) {
+                System.out.println("Unable to generate table arrangement");
+            }
+            return;
         }
+        navigation(sc);
     }
 
     // returns the user input with boolean (true if want to add name and false if want to see table arrangement)
@@ -117,12 +111,72 @@ public class Planner {
         String firstName = sc.nextLine();
         
         System.out.print("Last Name: ");
-        String lastname = sc.nextLine();
+        String lastName = sc.nextLine();
 
-        int company
+        System.out.println("Company: ");
+        String company = sc.nextLine();
+
+        if (confirmAddPerson(sc, firstName + " " + lastName, company)) {
+
+        } else {
+            addPerson(sc);
+            return;
+        }
+        
+        newCompanyCheck(company);
+        newPersonCheck(firstName, lastName, company);
     }
 
-    private int getUserInt(Scanner sc) {
+    // returns whether user has confirmed that want to add person with name name and from company company
+    private boolean confirmAddPerson(Scanner sc, String name, String company) {
+        String input;
+        while (true) {
+            System.out.println("Confirm you want to add the following person:");
+            System.out.println("Name: " + name + "\nCompany: " + company);
+            System.out.print("Enter y or n");
+            input = sc.nextLine();
+
+            if (input.equals("y")) {
+                return true;
+            } else if (input.equals("n")) {
+                return false;
+            }
+        }
+    }
+
+    // check whether company c already has someone them from attending, adds company to list if not already
+    private void newCompanyCheck(String c) {
+        for (int i = 0; i < totalCompanies; i++) {
+            if (allCompanies[i].equals(c)) {
+                return;
+            }
+        }
+        allCompanies[totalCompanies] = c;
+        totalCompanies++;
+    }
+
+    // returns whether someone is already attending, adds them to attending list if not already attending
+    private boolean newPersonCheck(String firstName, String lastName, String company) {
+        for (int i = 0; i < totalPeople; i++) {
+            if (allPeople[i].getFullName().equals(firstName + " " + lastName) && allCompanies[allPeople[i].getCompanyNum() - 1].equals(company)) {
+                return false;
+            }
+        }
+
+        // gets the company number
+        int companyNum = 0; // 0 is placeholder to avoid compiler complaints
+        for (int i = 0; i < totalCompanies; i++) {
+            if (allCompanies[i].equals(company)) {
+                companyNum = i + 1;
+            }
+        }
+
+        allPeople[totalPeople] = new Attendee("" + (totalPeople + 1) + "," + lastName + "," + firstName + "," + companyNum);
+        totalPeople++;
+        return true;
+    }
+
+    private boolean generateTableArrangement() {
 
     }
 }
