@@ -15,7 +15,7 @@ public class Runner {
             try {
                 n = Integer.parseInt(sc.nextLine());
                 if (n >= limit) {
-                    return Integer.parseInt(sc.nextLine());
+                    return n;
                 }
             } catch (NumberFormatException e) {}
         }

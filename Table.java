@@ -24,7 +24,7 @@ public class Table {
     public int amountFromCompany(int c) {
         int output = 0;
         for (int i = 0; i < totalPeople; i++) {
-            if (people[i].getCompanyNum == c) {
+            if (people[i].getCompanyNum() == c) {
                 output++;
             }
         }

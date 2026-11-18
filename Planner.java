@@ -80,7 +80,7 @@ public class Planner {
 
 
     private void navigation(Scanner sc) {
-        if (getUserInput(sc)) {
+        if (!getUserInput(sc)) {
             addPerson(sc);
         } else {
             if (!generateTableArrangement()) {
@@ -113,7 +113,7 @@ public class Planner {
         System.out.print("Last Name: ");
         String lastName = sc.nextLine();
 
-        System.out.println("Company: ");
+        System.out.print("Company: ");
         String company = sc.nextLine();
 
         if (confirmAddPerson(sc, firstName + " " + lastName, company)) {
@@ -133,7 +133,7 @@ public class Planner {
         while (true) {
             System.out.println("Confirm you want to add the following person:");
             System.out.println("Name: " + name + "\nCompany: " + company);
-            System.out.print("Enter y or n");
+            System.out.print("Enter y or n: ");
             input = sc.nextLine();
 
             if (input.equals("y")) {
@@ -177,6 +177,7 @@ public class Planner {
     }
 
     private boolean generateTableArrangement() {
-
+        // greedy algorithm
+        return true;
     }
 }
