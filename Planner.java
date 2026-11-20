@@ -259,7 +259,7 @@ public class Planner {
         return true;
     }
 
-    // greedy algorithm to generate all table arrangements
+    // returns whether a proper table arrangment can be created, if one can exist, then it make it
     private boolean generateTableArrangement() {
         // Checking that every company isn't sending to many people such that it would prevent the limit of x people from same company per table
         int maxCompanyAttendees = companyLimit * totalTables;
@@ -269,7 +269,15 @@ public class Planner {
             }
         }
         System.out.println("all companies satisfy the limit\n");
+        return greedyAlgorithm();
+    }
 
+    /* Algorithm for creating a table arrangement
+    Starts with first table, puts people there until either table full or too many people from same company at table is met, then moves to next table
+    If table full, it ignores it and does the same approach to the next table
+    Returns true if algorithm successful, and false if it fails
+    */
+    private boolean greedyAlgorithm() {
         int firstFreeTableIndex = 0; // index of the first table that has available seats
         int varyIndex;
         int companyNum;
@@ -283,20 +291,26 @@ public class Planner {
             varyIndex = firstFreeTableIndex;
             System.out.println("varyIndex = " + varyIndex);
             t = tableList[varyIndex];
+            System.out.println("Table " + (varyIndex + 1));
             System.out.println("People at the table of varyIndex = " + t.allPeople());
+            System.out.println("Total tables = " + totalTables);
             
             // finds table that hasn't reached the limit of x people from same company at a table
             while(t.amountFromCompany(companyNum) == companyLimit) {
                 varyIndex++;
                 if (varyIndex == totalTables) { // only equals totalTables if has checked last table
-                    System.out.println("\nNo more tables left");
+                    System.out.println("\nNo more tables left b/c varyIndex = " + varyIndex);
                     return false;
                 } else {
                     t = tableList[varyIndex];
+                    System.out.println("Table " + (varyIndex + 1));
+                    System.out.println("People at the table of varyIndex = " + t.allPeople());
+                    System.out.println("Total tables = " + totalTables);
                 }
             }
 
             t.addPerson(a); // adds person a to the table
+            System.out.println();
 
             if (!t.seatAvail()) {
                 firstFreeTableIndex++; // updates variable is table has become full
@@ -309,6 +323,26 @@ public class Planner {
                 }
             }
         }
-        return true; // only reaches this if successfully set everyone at a table
+        return true;
     }
+
+    /* Algorithm for creating table arrangement
+    Assigns seats at table one by one (ex: at some instance, every table will have one person)
+    If assigning a seat will break the limit of the amount of the same people at the company, put that person at the next available table
+    Returns true if algorithm successful, and false if it fails 
+    */
+    private boolean spreadAlgorithm() {
+
+        return true;
+    }
+
+    /* Algorithm for creating table arrangement
+    Populates every table with people without checking for limit of amount of people at the same company at the same table
+    Once everyone assigned, looks at each table and swaps people such that the limit is satisfied
+    Returns true if algorithm successful, and false if it fails
+    */
+   private boolean correctionAlgorithm() {
+
+        return true;
+   }
 }
