@@ -332,6 +332,48 @@ public class Planner {
     Returns true if algorithm successful, and false if it fails 
     */
     private boolean spreadAlgorithm() {
+        int firstFreeTableIndex = 0; // base index
+        int varyIndex;
+        int companyNum;
+        Table t;
+        Attendee a;
+        int[] size = new int[totalTables];
+        for (int s = 0; s < totalTables; s++) {
+            size[s] = 0;
+        }
+
+        for (int i = 0; i < totalPeople; i++) {
+            a = allPeople[i];System.out.println("Current Attendee = "  + a.getFullName());
+            companyNum = a.getCompanyNum();
+            System.out.println("Company Number of person = " + a.getCompanyNum());
+            varyIndex = firstFreeTableIndex;
+            System.out.println("varyIndex = " + varyIndex);
+            t = tableList[varyIndex];
+            System.out.println("Table " + (varyIndex + 1));
+            System.out.println("People at the table of varyIndex = " + t.allPeople());
+            System.out.println("Total tables = " + totalTables);
+
+            // Finds available table
+            while(t.amountFromCompany(companyNum) == companyLimit) {
+                do {
+                    varyIndex = varyIndex + 1 % (totalTables);
+                    if (varyIndex == firstFreeTableIndex) { // only equals if varyIndex has looped through all tables and non satisfactory
+                        System.out.println("\nNo more tables left b/c varyIndex = " + varyIndex);
+                        return false;
+                    } else {
+                    t = tableList[varyIndex];
+                        System.out.println("Table " + (varyIndex + 1));
+                        System.out.println("People at the table of varyIndex = " + t.allPeople());
+                        System.out.println("Total tables = " + totalTables); 
+                    }
+                } while (size[varyIndex] == SeatsPerTableAmount) // skips tables that are already full
+                
+            }
+
+            t.addPerson(a);
+            size[varyIndex]++;
+            varyIndex = varyIndex + 1 % (totalTables);
+        }
 
         return true;
     }
