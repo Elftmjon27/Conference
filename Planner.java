@@ -98,8 +98,8 @@ public class Planner {
         }
     }
 
-
-    private void navigation(Scanner sc) {
+    // method that gets what user want to do in the beginning (before making table arrangement)
+    private void navigation1(Scanner sc) {
         if (!getUserInput(sc)) {
             addPerson(sc);
         } else {
@@ -108,7 +108,12 @@ public class Planner {
             }
             return;
         }
-        navigation(sc);
+        navigation1(sc);
+    }
+
+    // method that gets what user want to do after making the table arrangement
+    private void navigation2(Scanner sc) {
+
     }
 
     // returns the user input with boolean (true if want to add name and false if want to see table arrangement)
@@ -207,10 +212,38 @@ public class Planner {
         }
 
         int firstFreeTableIndex = 0; // index of the first table that has available seats
+        int varyIndex;
         int companyNum;
         Table t;
+        Attendee a;
         for (int i = 0; i < totalPeople; i++) {
+            a = people[i];
+            companyNum = a.getCompanyNum();
+            varyIndex = firstFreeTableIndex;
+            t = tableList[varyIndex];
+            
+            // finds table that hasn't reached the limit of x people from same company at a table
+            while(t.amountFromCompany(companyNum) == companyLimit) {
+                varyIndex++;
+                if (varyIndex == totalTables) { // only equals totalTables if has checked last table
+                    return false;
+                } else {
+                    t = tableList[varyIndex];
+                }
+            }
 
+            t.addPerson(a); // adds person a to the table
+
+            if (!t.seatAvail()) {
+                firstFreeTableIndex++; // updates variable is table has become full
+                if (firstFreeTableIndex == totalTables) { // if out of tables, checks whether put everyone at a table
+                    if (i == totalPeople - 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
         }
     }
 }
