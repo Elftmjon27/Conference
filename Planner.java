@@ -100,13 +100,13 @@ public class Planner {
 
     // method that gets what user want to do in the beginning (before making table arrangement)
     private void navigation1(Scanner sc) {
-        if (!getUserInput(sc)) {
+        if (!getUserInput1(sc)) {
             addPerson(sc);
         } else {
             if (!generateTableArrangement()) {
                 System.out.println("Unable to generate table arrangement");
             }
-            return;
+            navigation2(sc);
         }
         navigation1(sc);
     }
@@ -116,8 +116,8 @@ public class Planner {
 
     }
 
-    // returns the user input with boolean (true if want to add name and false if want to see table arrangement)
-    private boolean getUserInput(Scanner sc) {
+    // returns the user input with boolean (true if want to add name and false if want to see table arrangement), used for navigation1()
+    private boolean getUserInput1(Scanner sc) {
         System.out.println("Do you want to see the table arrangement or add an attendee?");
         String input = sc.nextLine();
 
@@ -126,7 +126,20 @@ public class Planner {
         } else if (input.contains("add")) {
             return false;
         } else {
-            return getUserInput(sc);
+            return getUserInput1(sc);
+        }
+    }
+
+    private int getUserInput2(Scanner sc) {
+        System.out.println("Do you want to print the table arrangement, see all guests at an indiviudal table, or find where a guest is sitting");
+        String input = sc.nextLine();
+
+        if (input.contains("print")) {
+
+        } else if (input.contains("guests") || input.contains("individual table")) {
+
+        } else if (input.contains()) {
+
         }
     }
 
