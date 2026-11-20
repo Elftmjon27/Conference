@@ -13,9 +13,8 @@ public class Planner {
     private int totalPeople = 0; // number of people attending starting from 0
 
     private String[] allCompanies; // names of companies
-    private int totalCompanies = 0; // number of companies that have number attending
-
     private int[] companyFrequency; // counts the number of people from a company attending
+    private int totalCompanies = 0; // number of companies that have number attending
 
     public Planner(int tableAmount, int SeatsPerTableAmount, int limit)  {
         totalTables = tableAmount;
@@ -197,8 +196,21 @@ public class Planner {
         return true;
     }
 
+    // greedy algorithm to generate all table arrangements
     private boolean generateTableArrangement() {
-        // greedy algorithm
-        return true;
+        // Checking that every company isn't sending to many people such that it would prevent the limit of x people from same company per table
+        int maxCompanyAttendees = companyLimit * totalTables;
+        for (int j = 0; j < totalCompanies; j++) {
+            if (companyFrequency[j] > maxCompanyAttendees) {
+                return false;
+            }
+        }
+
+        int firstFreeTableIndex = 0; // index of the first table that has available seats
+        int companyNum;
+        Table t;
+        for (int i = 0; i < totalPeople; i++) {
+
+        }
     }
 }
