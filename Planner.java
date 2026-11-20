@@ -1,5 +1,5 @@
 // Class that creates the plan and arrangement of tables
-import java.io.*;
+import java.io.File;
 import java.util.Scanner;
 public class Planner {
     private int totalTables; // number of tables
@@ -127,7 +127,33 @@ public class Planner {
 
     // method that gets what user want to do after making the table arrangement
     private void navigation2(Scanner sc) {
+        int n = getUserInput2(sc);
 
+        if (n == 0) {
+            for (int i = 0; i < totalTables; i++) {
+                System.out.print("Table " + (i + 1) + ":" + tableList[i].allPeople());
+            }
+        } else if (n == 1) {
+            int a = getUserInt();
+            System.out.print("Table " + (a + 1) + ":" + tableList[a].allPeople());
+        } else if (n == 2) {
+            System.out.print("Enter full name: ");
+            String name = sc.nextLine();
+            boolean found = false;
+            
+            for (int j = 0 ; j < totalTables && !found; j++) {
+                if (tableList[j].hasPerson(name)) {
+                    System.out.println(name + " is at table " + (j + 1));
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                System.out.println("Unable to find the table where " + name + " is supposed to be");
+            }
+        }
+
+        navigation2(sc);
     }
 
     private int getUserInput2(Scanner sc) {
@@ -135,16 +161,13 @@ public class Planner {
         String input = sc.nextLine();
 
         if (input.contains("print")) {
-            for (int i = 0; i < totalTables; i++) {
-                System.out.print("Table " + (i + 1) + ":" + tableList[i].allPeople());
-            }
+            return 0;
         } else if (input.contains("guests") || input.contains("individual table")) {
-            int n = getUserInt();
-            System.out.print("Table " + (n + 1) + ":" + tableList[n].allPeople());
+            return 1;
         } else if (input.contains("guest")) {
-            System.out.print("Enter full name: ");
-            String name = sc.nextLine();
+            return 2;
         }
+        return getUserInput2(sc);
     }
 
     // returns the int user enters for table number, used in navigation2()
