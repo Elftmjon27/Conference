@@ -15,6 +15,8 @@ public class Planner {
     private String[] allCompanies; // names of companies
     private int totalCompanies = 0; // number of companies that have number attending
 
+    private int[] companyFrequency; // counts the number of people from a company attending
+
     public Planner(int tableAmount, int SeatsPerTableAmount, int limit)  {
         totalTables = tableAmount;
         totalSeatsPerTable = SeatsPerTableAmount;
@@ -23,6 +25,17 @@ public class Planner {
         allPeople = new Attendee[totalSeats]; // one person to one seat
         allCompanies = new String[totalSeats]; // if every company sends one person, then # of companies = # of seats
         tableList= new Table[totalTables]; // total number of table need that amount of tables
+        companyFrequency = new int[totalSeats]; // same size as allCompanies list
+
+        // creates table objects
+        for (int i = 0; i < totalTables; i++) {
+            tableList[i] = new Table(totalSeatsPerTable);
+        }
+
+        // creates 0 entries for company frequency list
+        for (int j = 0; j < totalSeats; j++) {
+            companyFrequency[j] = 0;
+        }
 
         // creates list of people attending who have already registered
         int temp = createPeopleList();
@@ -39,12 +52,7 @@ public class Planner {
             System.out.println("Can't find list of companies, unable to make table arrangement");
             return;
         }
-
-        // creates table objects
-        for (int i = 0; i < totalTables; i++) {
-            tableList[i] = new Table(totalSeatsPerTable);
-        }
-
+        
         navigation(new Scanner(System.in));
     }
 
@@ -54,13 +62,16 @@ public class Planner {
         File list = new File("names.csv");
         try {
             Scanner scanName = new Scanner(list);
+            Attendee a;
 
             while(scanName.hasNext()) {
                 totalPeople++;
                 if (totalPeople == totalSeats) {
                     return 1;
                 }
-                allPeople[totalPeople - 1] = new Attendee(scanName.nextLine());
+                a = new Attendee(scanName.nextLine());
+                allPeople[totalPeople - 1] = a;
+                companyFrequency[a.getCompanyNum() - 1]++;
             }
             scanName.close();
             return 2;
