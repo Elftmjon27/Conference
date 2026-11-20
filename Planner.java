@@ -1,5 +1,6 @@
 // Class that creates the plan and arrangement of tables
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 public class Planner {
     private int totalTables; // number of tables
@@ -52,7 +53,7 @@ public class Planner {
             return;
         }
         
-        navigation(new Scanner(System.in));
+        navigation1(new Scanner(System.in));
     }
 
     // fills out allPeople array with all attendees in names.csv
@@ -105,6 +106,7 @@ public class Planner {
         } else {
             if (!generateTableArrangement()) {
                 System.out.println("Unable to generate table arrangement");
+                return;
             }
             navigation2(sc);
         }
@@ -134,7 +136,7 @@ public class Planner {
                 System.out.print("Table " + (i + 1) + ":" + tableList[i].allPeople());
             }
         } else if (n == 1) {
-            int a = getUserInt();
+            int a = getUserInt(sc);
             System.out.print("Table " + (a + 1) + ":" + tableList[a].allPeople());
         } else if (n == 2) {
             System.out.print("Enter full name: ");
@@ -176,7 +178,7 @@ public class Planner {
         String input;
         int n;
         while (true) {
-            input = sc.nextLine()
+            input = sc.nextLine();
             try {
                 n = Integer.parseInt(input);
                 if (n >= 1 && n <= totalTables) {
@@ -266,6 +268,7 @@ public class Planner {
                 return false;
             }
         }
+        System.out.println("all companies satisfy the limit\n");
 
         int firstFreeTableIndex = 0; // index of the first table that has available seats
         int varyIndex;
@@ -273,15 +276,20 @@ public class Planner {
         Table t;
         Attendee a;
         for (int i = 0; i < totalPeople; i++) {
-            a = people[i];
+            a = allPeople[i];
+            System.out.println("Current Attendee = "  + a.getFullName());
             companyNum = a.getCompanyNum();
+            System.out.println("Company Number of person = " + a.getCompanyNum());
             varyIndex = firstFreeTableIndex;
+            System.out.println("varyIndex = " + varyIndex);
             t = tableList[varyIndex];
+            System.out.println("People at the table of varyIndex = " + t.allPeople());
             
             // finds table that hasn't reached the limit of x people from same company at a table
             while(t.amountFromCompany(companyNum) == companyLimit) {
                 varyIndex++;
                 if (varyIndex == totalTables) { // only equals totalTables if has checked last table
+                    System.out.println("\nNo more tables left");
                     return false;
                 } else {
                     t = tableList[varyIndex];
@@ -301,5 +309,6 @@ public class Planner {
                 }
             }
         }
+        return true; // only reaches this if successfully set everyone at a table
     }
 }
