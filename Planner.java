@@ -111,7 +111,7 @@ public class Planner {
         navigation1(sc);
     }
 
-    // returns the user input with boolean (true if want to add name and false if want to see table arrangement), used for navigation1()
+    // returns the user input with boolean (true if want to add name and false if want to see table arrangement), used in navigation1()
     private boolean getUserInput1(Scanner sc) {
         System.out.println("Do you want to see the table arrangement or add an attendee?");
         String input = sc.nextLine();
@@ -139,16 +139,27 @@ public class Planner {
                 System.out.print("Table " + (i + 1) + ":" + tableList[i].allPeople());
             }
         } else if (input.contains("guests") || input.contains("individual table")) {
-            int a = getUserInt();
-        } else if (input.contains()) {
-
+            int n = getUserInt();
+            System.out.print("Table " + (n + 1) + ":" + tableList[n].allPeople());
+        } else if (input.contains("guest")) {
+            System.out.print("Enter full name: ");
+            String name = sc.nextLine();
         }
     }
 
+    // returns the int user enters for table number, used in navigation2()
     private int getUserInt(Scanner sc) {
         System.out.print("Enter the table you want to see: ");
+        String input;
+        int n;
         while (true) {
-            
+            input = sc.nextLine()
+            try {
+                n = Integer.parseInt(input);
+                if (n >= 1 && n <= totalTables) {
+                    return n - 1;
+                }
+            } catch (NumberFormatException e) {}
         }
     }
 
