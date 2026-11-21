@@ -27,11 +27,6 @@ public class Planner {
         tableList= new Table[totalTables]; // total number of table need that amount of tables
         companyFrequency = new int[totalSeats]; // same size as allCompanies list
 
-        // creates table objects
-        for (int i = 0; i < totalTables; i++) {
-            tableList[i] = new Table(totalSeatsPerTable);
-        }
-
         // creates 0 entries for company frequency list
         for (int j = 0; j < totalSeats; j++) {
             companyFrequency[j] = 0;
@@ -51,6 +46,11 @@ public class Planner {
         if (!createCompaniesList()) {
             System.out.println("Can't find list of companies, unable to make table arrangement");
             return;
+        }
+
+        // creates table objects
+        for (int i = 0; i < totalTables; i++) {
+            tableList[i] = new Table((i + 1), totalSeatsPerTable, allCompanies);
         }
         
         navigation1(new Scanner(System.in));
@@ -134,12 +134,12 @@ public class Planner {
         if (n == 0) {
             System.out.println(); // aesthetics
             for (int i = 0; i < totalTables; i++) {
-                System.out.print("Table " + (i + 1) + ":\n" + tableList[i].allPeople() + "\n");
+                System.out.println(tableList[i].allPeople());
             }
         } else if (n == 1) {
             int a = getUserInt(sc);
             System.out.println(); // aesthetics
-            System.out.print("Table " + (a + 1) + ":\n" + tableList[a].allPeople());
+            System.out.print(tableList[a].allPeople());
         } else if (n == 2) {
             System.out.print("Enter full name: ");
             String name = sc.nextLine();
@@ -155,13 +155,21 @@ public class Planner {
             if (!found) {
                 System.out.println("Unable to find the table where " + name + " is supposed to be");
             }
+        } else if (n == 3) {
+            System.out.print("Company name: ");
+            String c = sc.nextLine();
+            String names = "\n"; // aesthetics
+            for (int k = 0; k < totalTables; k++) {
+                names += tableList[k].peopleFromCompany(c);
+            }
+            System.out.println(names.substring(0, names.length() - 1)); // substring b/c not want extra \n char from method
         }
 
         navigation2(sc);
     }
 
     private int getUserInput2(Scanner sc) {
-        System.out.println("\nDo you want to print the table arrangement, see all guests at an indiviudal table, or find where a guest is sitting");
+        System.out.println("\nDo you want to print the table arrangement, see all guests at an indiviudal table, find where a guest is sitting, or generate where people from a company are sitting");
         String input = sc.nextLine();
 
         if (input.contains("print")) {
@@ -170,6 +178,8 @@ public class Planner {
             return 1;
         } else if (input.contains("find") || input.contains("guest")) {
             return 2;
+        } else if (input.contains("generate") || input.contains("company")) {
+            return 3;
         }
         return getUserInput2(sc);
     }
