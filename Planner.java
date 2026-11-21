@@ -115,7 +115,7 @@ public class Planner {
 
     // returns the user input with boolean (true if want to add name and false if want to see table arrangement), used in navigation1()
     private boolean getUserInput1(Scanner sc) {
-        System.out.println("Do you want to see the table arrangement or add an attendee?");
+        System.out.println("\nDo you want to see the table arrangement or add an attendee?");
         String input = sc.nextLine();
 
         if (input.contains("table") || input.contains("arrangement")) {
@@ -132,12 +132,14 @@ public class Planner {
         int n = getUserInput2(sc);
 
         if (n == 0) {
+            System.out.println(); // aesthetics
             for (int i = 0; i < totalTables; i++) {
                 System.out.print("Table " + (i + 1) + ":\n" + tableList[i].allPeople() + "\n");
             }
         } else if (n == 1) {
             int a = getUserInt(sc);
-            System.out.print("Table " + (a + 1) + ":" + tableList[a].allPeople());
+            System.out.println(); // aesthetics
+            System.out.print("Table " + (a + 1) + ":\n" + tableList[a].allPeople());
         } else if (n == 2) {
             System.out.print("Enter full name: ");
             String name = sc.nextLine();
@@ -159,14 +161,14 @@ public class Planner {
     }
 
     private int getUserInput2(Scanner sc) {
-        System.out.println("Do you want to print the table arrangement, see all guests at an indiviudal table, or find where a guest is sitting");
+        System.out.println("\nDo you want to print the table arrangement, see all guests at an indiviudal table, or find where a guest is sitting");
         String input = sc.nextLine();
 
         if (input.contains("print")) {
             return 0;
-        } else if (input.contains("guests") || input.contains("individual table")) {
+        } else if (input.contains("see") || input.contains("guests") || input.contains("individual table")) {
             return 1;
-        } else if (input.contains("guest")) {
+        } else if (input.contains("find") || input.contains("guest")) {
             return 2;
         }
         return getUserInput2(sc);
@@ -174,10 +176,10 @@ public class Planner {
 
     // returns the int user enters for table number, used in navigation2()
     private int getUserInt(Scanner sc) {
-        System.out.print("Enter the table you want to see: ");
         String input;
         int n;
-        while (true) {
+        do {
+            System.out.print("Enter the table you want to see: ");
             input = sc.nextLine();
             try {
                 n = Integer.parseInt(input);
@@ -185,12 +187,12 @@ public class Planner {
                     return n - 1;
                 }
             } catch (NumberFormatException e) {}
-        }
+        } while (true);
     }
 
     // Asks user for information about person and then adds them to list
     private void addPerson(Scanner sc) {
-        System.out.print("First Name: ");
+        System.out.print("\nFirst Name: ");
         String firstName = sc.nextLine();
         
         System.out.print("Last Name: ");
@@ -214,7 +216,7 @@ public class Planner {
     private boolean confirmAddPerson(Scanner sc, String name, String company) {
         String input;
         while (true) {
-            System.out.println("Confirm you want to add the following person:");
+            System.out.println("\nConfirm you want to add the following person:");
             System.out.println("Name: " + name + "\nCompany: " + company);
             System.out.print("Enter y or n: ");
             input = sc.nextLine();
@@ -270,7 +272,7 @@ public class Planner {
         }
         // System.out.println("all companies satisfy the limit\n");
         return spreadAlgorithm();
-        //return greedyAlgorithm() || spreadAlgorithm() || correctionAlgorithm();
+        //return greedyAlgorithm() || spreadAlgorithm() || correctionAlgorithm() || isolationAlgorithm();
     }
 
     /* Algorithm for creating a table arrangement
@@ -345,7 +347,7 @@ public class Planner {
         int[] size = new int[totalTables];
         for (int s = 0; s < totalTables; s++) {
             size[s] = 0;
-            tableList[s] = new Table(totalSeatsPerTable); // resets tables from greedy algorithm
+            // tableList[s] = new Table(totalSeatsPerTable); // resets tables from greedy algorithm
         }
 
         for (int i = 0; i < totalPeople; i++) {
@@ -398,9 +400,19 @@ public class Planner {
     */
    /* Unused, so commented
    private boolean correctionAlgorithm() {
-        System.out.println("TestS");
 
         return true;
    }
    */
+
+    /* Algortithm for creating table arrangement
+    Ranks each company by how many of its people are attending
+    Populates each table starting with company with most people attending while fulfilling the limit of x people from same company per table
+    */
+    /* Unused, so commented
+    private boolean isolationAlgorithm() {
+
+        return true;
+    }
+    */
 }
