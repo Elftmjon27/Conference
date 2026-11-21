@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Runner {
     public static void main(String args[]) {
         Scanner sc = new Scanner(System.in);
-        Planner test = new Planner(10, 10, 2);
+        // Planner test = new Planner(10, 10, 2);
         // Creates planner with User's given total tables amount and total seats per table amount
         Planner p = new Planner(getUserInt(sc, "Total Tables: ", 1), getUserInt(sc, "Total Seats per Table: ", 1), getUserInt(sc, "Limit of people from the same company at a table: ", 0));
     }

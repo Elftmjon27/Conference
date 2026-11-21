@@ -45,10 +45,7 @@ public class Table {
     public String allPeople() {
         String names = "";
         for (int i = 0; i < totalPeople; i++) {
-            names += people[i].getFullName();
-            if (i != totalPeople - 1) {
-                names += ", ";
-            }
+            names += people[i].getFullName() + "\n";
         }
         return names;
     }

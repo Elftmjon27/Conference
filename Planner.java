@@ -133,7 +133,7 @@ public class Planner {
 
         if (n == 0) {
             for (int i = 0; i < totalTables; i++) {
-                System.out.print("Table " + (i + 1) + ":" + tableList[i].allPeople());
+                System.out.print("Table " + (i + 1) + ":\n" + tableList[i].allPeople() + "\n");
             }
         } else if (n == 1) {
             int a = getUserInt(sc);
@@ -268,8 +268,9 @@ public class Planner {
                 return false;
             }
         }
-        System.out.println("all companies satisfy the limit\n");
-        return greedyAlgorithm() || spreadAlgorithm();
+        // System.out.println("all companies satisfy the limit\n");
+        return spreadAlgorithm();
+        //return greedyAlgorithm() || spreadAlgorithm() || correctionAlgorithm();
     }
 
     /* Algorithm for creating a table arrangement
@@ -277,7 +278,9 @@ public class Planner {
     If table full, it ignores it and does the same approach to the next table
     Returns true if algorithm successful, and false if it fails
     */
+   /* Unused, so commented
     private boolean greedyAlgorithm() {
+        System.out.println("Greedy Algorithm -----------------------");
         int firstFreeTableIndex = 0; // index of the first table that has available seats
         int varyIndex;
         int companyNum;
@@ -325,6 +328,7 @@ public class Planner {
         }
         return true;
     }
+    */
 
     /* Algorithm for creating table arrangement
     Assigns seats at table one by one (ex: at some instance, every table will have one person)
@@ -332,6 +336,7 @@ public class Planner {
     Returns true if algorithm successful, and false if it fails 
     */
     private boolean spreadAlgorithm() {
+        // System.out.println("\n\nSpread Algorithm -----------------------------------\n\n");
         int firstFreeTableIndex = 0; // base index
         int varyIndex;
         int companyNum;
@@ -340,39 +345,47 @@ public class Planner {
         int[] size = new int[totalTables];
         for (int s = 0; s < totalTables; s++) {
             size[s] = 0;
+            tableList[s] = new Table(totalSeatsPerTable); // resets tables from greedy algorithm
         }
 
         for (int i = 0; i < totalPeople; i++) {
-            a = allPeople[i];System.out.println("Current Attendee = "  + a.getFullName());
+            a = allPeople[i];
             companyNum = a.getCompanyNum();
-            System.out.println("Company Number of person = " + a.getCompanyNum());
             varyIndex = firstFreeTableIndex;
-            System.out.println("varyIndex = " + varyIndex);
             t = tableList[varyIndex];
+            /*
+            System.out.println("Current Attendee = "  + a.getFullName());
+            System.out.println("Company Number of person = " + a.getCompanyNum());
+            System.out.println("varyIndex = " + varyIndex);
             System.out.println("Table " + (varyIndex + 1));
             System.out.println("People at the table of varyIndex = " + t.allPeople());
             System.out.println("Total tables = " + totalTables);
+            */
 
             // Finds available table
             while(t.amountFromCompany(companyNum) == companyLimit) {
                 do {
-                    varyIndex = varyIndex + 1 % (totalTables);
+                    varyIndex = (varyIndex + 1) % (totalTables);
+                    //System.out.println("New varyIndex = " + varyIndex);
                     if (varyIndex == firstFreeTableIndex) { // only equals if varyIndex has looped through all tables and non satisfactory
                         System.out.println("\nNo more tables left b/c varyIndex = " + varyIndex);
                         return false;
                     } else {
                     t = tableList[varyIndex];
+                        /*
                         System.out.println("Table " + (varyIndex + 1));
                         System.out.println("People at the table of varyIndex = " + t.allPeople());
                         System.out.println("Total tables = " + totalTables); 
+                        */
                     }
                 } while (size[varyIndex] == totalSeatsPerTable); // skips tables that are already full
                 
             }
 
+            //System.out.println();
             t.addPerson(a);
             size[varyIndex]++;
-            varyIndex = varyIndex + 1 % (totalTables);
+            firstFreeTableIndex = (firstFreeTableIndex + 1) % (totalTables);
         }
 
         return true;
@@ -383,8 +396,11 @@ public class Planner {
     Once everyone assigned, looks at each table and swaps people such that the limit is satisfied
     Returns true if algorithm successful, and false if it fails
     */
+   /* Unused, so commented
    private boolean correctionAlgorithm() {
+        System.out.println("TestS");
 
         return true;
    }
+   */
 }
