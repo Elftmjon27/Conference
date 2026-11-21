@@ -269,7 +269,7 @@ public class Planner {
             }
         }
         System.out.println("all companies satisfy the limit\n");
-        return greedyAlgorithm();
+        return greedyAlgorithm() || spreadAlgorithm();
     }
 
     /* Algorithm for creating a table arrangement
@@ -366,7 +366,7 @@ public class Planner {
                         System.out.println("People at the table of varyIndex = " + t.allPeople());
                         System.out.println("Total tables = " + totalTables); 
                     }
-                } while (size[varyIndex] == SeatsPerTableAmount) // skips tables that are already full
+                } while (size[varyIndex] == totalSeatsPerTable); // skips tables that are already full
                 
             }
 
