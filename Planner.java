@@ -106,9 +106,11 @@ public class Planner {
 
     // method that gets what user want to do in the beginning (before making table arrangement)
     private void navigation1(Scanner sc) {
+        /*
         for (int i = 0; i < totalCompanies; i++) {
             System.out.println(allCompanies[i] + " - " + companyFrequency[i] + " employees attending");
         }
+        */
         if (!getUserInput1(sc)) {
             addPerson(sc);
         } else {
@@ -269,7 +271,7 @@ public class Planner {
         }
 
         allPeople[totalPeople] = new Attendee("" + (totalPeople + 1) + "," + lastName + "," + firstName + "," + companyNum);
-        order[companyNum - 1] = totalPeople + ","; 
+        order[companyNum - 1] += totalPeople + ","; 
         totalPeople++;
         return true;
     }
@@ -358,82 +360,25 @@ public class Planner {
         // System.out.println("\n\nSpread Algorithm -----------------------------------\n\n");
         int firstFreeTableIndex = 0; // base index
         int varyIndex;
-        // int companyNum;
-        // Table t;
-        // Attendee a;
-        /*
-        int[] size = new int[totalTables];
-        for (int s = 0; s < totalTables; s++) {
-            size[s] = 0;
-            // tableList[s] = new Table(totalSeatsPerTable); // resets tables from greedy algorithm
-        }
-        */
-        System.out.println("Order[0] = " + order[0]);
-        String[] test = order[0].split(",");
-        System.out.println("Test[0] = " + test[0]);
-        System.out.println("Test[1] = " + test[1]);
-        System.out.println("Test length = " + test.length + "\n");
         int length = totalCompanies;
-        System.out.println("Length = " + length + "\n\n");
+        // System.out.println("Length = " + length + "\n\n");
         int length2;
         String[] line;
         for (int i = 0; i < length; i++) {
             line = order[i].split(",");
             length2 = line.length;
+            /*
             System.out.println("Length2 = " + length2 + "-----------------------------------");
             System.out.println("Iteration = " + (i + 1));
+            */
             for (int j = 0; j < length2; j++) {
                 varyIndex = firstFreeTableIndex;
-                System.out.println("Line[" + j + "] = " + line[j]);
-                System.out.println("varyIndex = " + varyIndex + "\n");
+                //System.out.println("Line[" + j + "] = " + line[j]);
+                //System.out.println("varyIndex = " + varyIndex + "\n");
                 tableList[varyIndex].addPerson(allPeople[Integer.parseInt(line[j])]);
                 firstFreeTableIndex = (firstFreeTableIndex + 1) % (totalTables);
             }
         }
-
-        /*
-        for (int i = 0; i < totalPeople; i++) {
-            a = allPeople[i];
-            companyNum = a.getCompanyNum();
-            varyIndex = firstFreeTableIndex;
-            t = tableList[varyIndex];
-            /*
-            System.out.println("Current Attendee = "  + a.getFullName());
-            System.out.println("Company Number of person = " + a.getCompanyNum());
-            System.out.println("varyIndex = " + varyIndex);
-            System.out.println("Table " + (varyIndex + 1));
-            System.out.println("People at the table of varyIndex = " + t.allPeople());
-            System.out.println("Total tables = " + totalTables);
-            */
-
-            // Finds available table
-            /*
-            while(t.amountFromCompany(companyNum) == companyLimit) {
-                do {
-                    varyIndex = (varyIndex + 1) % (totalTables);
-                    //System.out.println("New varyIndex = " + varyIndex);
-                    if (varyIndex == firstFreeTableIndex) { // only equals if varyIndex has looped through all tables and non satisfactory
-                        System.out.println("\nNo more tables left b/c varyIndex = " + varyIndex);
-                        return false;
-                    } else {
-                    t = tableList[varyIndex];
-                        /*
-                        System.out.println("Table " + (varyIndex + 1));
-                        System.out.println("People at the table of varyIndex = " + t.allPeople());
-                        System.out.println("Total tables = " + totalTables); 
-                        */ /*
-                    }
-                } while (size[varyIndex] == totalSeatsPerTable); // skips tables that are already full
-                
-            }
-
-            //System.out.println();
-            t.addPerson(a);
-            size[varyIndex]++;
-            firstFreeTableIndex = (firstFreeTableIndex + 1) % (totalTables);
-        }
-        */
-        
         return true;
     }
 
