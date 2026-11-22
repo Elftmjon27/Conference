@@ -374,17 +374,18 @@ public class Planner {
         System.out.println("Test[1] = " + test[1]);
         System.out.println("Test length = " + test.length + "\n");
         int length = totalCompanies;
-        System.out.println("Length = " + length);
+        System.out.println("Length = " + length + "\n\n");
         int length2;
         String[] line;
         for (int i = 0; i < length; i++) {
             line = order[i].split(",");
             length2 = line.length;
-            System.out.println("Line = " + line);
-            System.out.println("Length2 = " + length2);
+            System.out.println("Length2 = " + length2 + "-----------------------------------");
+            System.out.println("Iteration = " + (i + 1));
             for (int j = 0; j < length2; j++) {
                 varyIndex = firstFreeTableIndex;
-                System.out.println("varyIndex = " + varyIndex);
+                System.out.println("Line[" + j + "] = " + line[j]);
+                System.out.println("varyIndex = " + varyIndex + "\n");
                 tableList[varyIndex].addPerson(allPeople[Integer.parseInt(line[j])]);
                 firstFreeTableIndex = (firstFreeTableIndex + 1) % (totalTables);
             }
