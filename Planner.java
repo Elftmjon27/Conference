@@ -101,6 +101,9 @@ public class Planner {
 
     // method that gets what user want to do in the beginning (before making table arrangement)
     private void navigation1(Scanner sc) {
+        for (int i = 0; i < totalCompanies; i++) {
+            System.out.println(allCompanies[i] + " - " + companyFrequency[i] + " employees attending");
+        }
         if (!getUserInput1(sc)) {
             addPerson(sc);
         } else {
@@ -116,7 +119,7 @@ public class Planner {
     // returns the user input with boolean (true if want to add name and false if want to see table arrangement), used in navigation1()
     private boolean getUserInput1(Scanner sc) {
         System.out.println("\nDo you want to see the table arrangement or add an attendee?");
-        String input = sc.nextLine();
+        String input = sc.nextLine().toLowerCase();
 
         if (input.contains("table") || input.contains("arrangement")) {
             return true;
@@ -153,10 +156,10 @@ public class Planner {
             }
 
             if (!found) {
-                System.out.println("Unable to find the table where " + name + " is supposed to be");
+                System.out.println("Unable to find the table where " + name);
             }
         } else if (n == 3) {
-            System.out.print("Company name: ");
+            System.out.print("\nCompany name: ");
             String c = sc.nextLine();
             String names = "\n"; // aesthetics
             for (int k = 0; k < totalTables; k++) {
@@ -170,7 +173,7 @@ public class Planner {
 
     private int getUserInput2(Scanner sc) {
         System.out.println("\nDo you want to print the table arrangement, see all guests at an indiviudal table, find where a guest is sitting, or generate where people from a company are sitting");
-        String input = sc.nextLine();
+        String input = sc.nextLine().toLowerCase();
 
         if (input.contains("print")) {
             return 0;
@@ -212,14 +215,13 @@ public class Planner {
         String company = sc.nextLine();
 
         if (confirmAddPerson(sc, firstName + " " + lastName, company)) {
-
-        } else {
-            addPerson(sc);
-            return;
+            if (newPersonCheck(firstName, lastName, company)) {
+                newCompanyCheck(company);
+            } else {
+                System.out.println(firstName + " " + lastName + " is already on the guest list");
+            }   
         }
-        
-        newCompanyCheck(company);
-        newPersonCheck(firstName, lastName, company);
+        return;
     }
 
     // returns whether user has confirmed that want to add person with name name and from company company
@@ -243,10 +245,12 @@ public class Planner {
     private void newCompanyCheck(String c) {
         for (int i = 0; i < totalCompanies; i++) {
             if (allCompanies[i].equals(c)) {
+                companyFrequency[i]++;
                 return;
             }
         }
         allCompanies[totalCompanies] = c;
+        companyFrequency[totalCompanies] = 1;
         totalCompanies++;
     }
 
