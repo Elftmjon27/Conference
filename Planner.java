@@ -17,6 +17,8 @@ public class Planner {
     private int[] companyFrequency; // counts the number of people from a company attending
     private int totalCompanies = 0; // number of companies that have number attending
 
+    private String[] order; // Ordered by company with most employees attending to least, records indexes of employees, used in algorithm
+
     public Planner(int tableAmount, int SeatsPerTableAmount, int limit)  {
         totalTables = tableAmount;
         totalSeatsPerTable = SeatsPerTableAmount;
@@ -26,10 +28,12 @@ public class Planner {
         allCompanies = new String[totalSeats]; // if every company sends one person, then # of companies = # of seats
         tableList= new Table[totalTables]; // total number of table need that amount of tables
         companyFrequency = new int[totalSeats]; // same size as allCompanies list
+        order = new String[totalSeats]; // same size as companyFrequency
 
         // creates 0 entries for company frequency list
         for (int j = 0; j < totalSeats; j++) {
             companyFrequency[j] = 0;
+            order[j] = "";
         }
 
         // creates list of people attending who have already registered
@@ -72,6 +76,7 @@ public class Planner {
                 a = new Attendee(scanName.nextLine());
                 allPeople[totalPeople - 1] = a;
                 companyFrequency[a.getCompanyNum() - 1]++;
+                order[a.getCompanyNum() - 1] += (a.getRank() - 1) + ",";
             }
             scanName.close();
             return 2;
@@ -215,11 +220,9 @@ public class Planner {
         String company = sc.nextLine();
 
         if (confirmAddPerson(sc, firstName + " " + lastName, company)) {
-            if (newPersonCheck(firstName, lastName, company)) {
-                newCompanyCheck(company);
-            } else {
+            if (!newPersonCheck(firstName, lastName, company)) {
                 System.out.println(firstName + " " + lastName + " is already on the guest list");
-            }   
+            }
         }
         return;
     }
@@ -241,36 +244,32 @@ public class Planner {
         }
     }
 
-    // check whether company c already has someone them from attending, adds company to list if not already
-    private void newCompanyCheck(String c) {
-        for (int i = 0; i < totalCompanies; i++) {
-            if (allCompanies[i].equals(c)) {
-                companyFrequency[i]++;
-                return;
-            }
-        }
-        allCompanies[totalCompanies] = c;
-        companyFrequency[totalCompanies] = 1;
-        totalCompanies++;
-    }
-
     // returns whether someone is already attending, adds them to attending list if not already attending
     private boolean newPersonCheck(String firstName, String lastName, String company) {
-        for (int i = 0; i < totalPeople; i++) {
+        for (int i = 0; i < totalPeople; i++) { // checks if person is already in the system
             if (allPeople[i].getFullName().equals(firstName + " " + lastName) && allCompanies[allPeople[i].getCompanyNum() - 1].equals(company)) {
                 return false;
             }
         }
 
-        // gets the company number
+        // gets the company number, person not already in system
         int companyNum = 0; // 0 is placeholder to avoid compiler complaints
         for (int i = 0; i < totalCompanies; i++) {
             if (allCompanies[i].equals(company)) {
+                companyFrequency[i]++;
                 companyNum = i + 1;
             }
         }
+        if (companyNum == 0) { // if company not already in system
+            companyNum = totalCompanies;
+            // adding company to records
+            allCompanies[totalCompanies] = company;
+            companyFrequency[totalCompanies] = 1;
+            totalCompanies++;
+        }
 
         allPeople[totalPeople] = new Attendee("" + (totalPeople + 1) + "," + lastName + "," + firstName + "," + companyNum);
+        order[companyNum - 1] = totalPeople + ","; 
         totalPeople++;
         return true;
     }
@@ -283,6 +282,10 @@ public class Planner {
             if (companyFrequency[j] > maxCompanyAttendees) {
                 return false;
             }
+        }
+
+        if (totalCompanies < Math.ceil((double) ((totalPeople) / (totalTables * companyLimit))) || totalCompanies > totalTables* totalSeatsPerTable) {
+            return false;
         }
         // System.out.println("all companies satisfy the limit\n");
         return spreadAlgorithm();
@@ -355,15 +358,39 @@ public class Planner {
         // System.out.println("\n\nSpread Algorithm -----------------------------------\n\n");
         int firstFreeTableIndex = 0; // base index
         int varyIndex;
-        int companyNum;
-        Table t;
-        Attendee a;
+        // int companyNum;
+        // Table t;
+        // Attendee a;
+        /*
         int[] size = new int[totalTables];
         for (int s = 0; s < totalTables; s++) {
             size[s] = 0;
             // tableList[s] = new Table(totalSeatsPerTable); // resets tables from greedy algorithm
         }
+        */
+        System.out.println("Order[0] = " + order[0]);
+        String[] test = order[0].split(",");
+        System.out.println("Test[0] = " + test[0]);
+        System.out.println("Test[1] = " + test[1]);
+        System.out.println("Test length = " + test.length + "\n");
+        int length = totalCompanies;
+        System.out.println("Length = " + length);
+        int length2;
+        String[] line;
+        for (int i = 0; i < length; i++) {
+            line = order[i].split(",");
+            length2 = line.length;
+            System.out.println("Line = " + line);
+            System.out.println("Length2 = " + length2);
+            for (int j = 0; j < length2; j++) {
+                varyIndex = firstFreeTableIndex;
+                System.out.println("varyIndex = " + varyIndex);
+                tableList[varyIndex].addPerson(allPeople[Integer.parseInt(line[j])]);
+                firstFreeTableIndex = (firstFreeTableIndex + 1) % (totalTables);
+            }
+        }
 
+        /*
         for (int i = 0; i < totalPeople; i++) {
             a = allPeople[i];
             companyNum = a.getCompanyNum();
@@ -379,6 +406,7 @@ public class Planner {
             */
 
             // Finds available table
+            /*
             while(t.amountFromCompany(companyNum) == companyLimit) {
                 do {
                     varyIndex = (varyIndex + 1) % (totalTables);
@@ -392,7 +420,7 @@ public class Planner {
                         System.out.println("Table " + (varyIndex + 1));
                         System.out.println("People at the table of varyIndex = " + t.allPeople());
                         System.out.println("Total tables = " + totalTables); 
-                        */
+                        */ /*
                     }
                 } while (size[varyIndex] == totalSeatsPerTable); // skips tables that are already full
                 
@@ -403,7 +431,8 @@ public class Planner {
             size[varyIndex]++;
             firstFreeTableIndex = (firstFreeTableIndex + 1) % (totalTables);
         }
-
+        */
+        
         return true;
     }
 
