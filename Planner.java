@@ -212,6 +212,11 @@ public class Planner {
 
     // Asks user for information about person and then adds them to list
     private void addPerson(Scanner sc) {
+        if (totalPeople == totalSeats) {
+            System.out.println("All seats full, unable to register another else");
+            return;
+        }
+
         System.out.print("\nFirst Name: ");
         String firstName = sc.nextLine();
         
@@ -263,7 +268,9 @@ public class Planner {
             }
         }
         if (companyNum == 0) { // if company not already in system
-            companyNum = totalCompanies;
+            //System.out.println("New Company");
+            companyNum = totalCompanies + 1;
+            //System.out.println("total Companies = " + (totalCompanies + 1));
             // adding company to records
             allCompanies[totalCompanies] = company;
             companyFrequency[totalCompanies] = 1;
@@ -272,6 +279,8 @@ public class Planner {
 
         allPeople[totalPeople] = new Attendee("" + (totalPeople + 1) + "," + lastName + "," + firstName + "," + companyNum);
         order[companyNum - 1] += totalPeople + ","; 
+        //System.out.println("totalPeople" + totalPeople);
+        //System.out.println("order[" + (companyNum - 1) + "] = " + order[companyNum - 1]);
         totalPeople++;
         return true;
     }
@@ -357,20 +366,20 @@ public class Planner {
     Returns true if algorithm successful, and false if it fails 
     */
     private boolean spreadAlgorithm() {
-        // System.out.println("\n\nSpread Algorithm -----------------------------------\n\n");
+        //System.out.println("\n\nSpread Algorithm -----------------------------------\n\n");
         int firstFreeTableIndex = 0; // base index
         int varyIndex;
         int length = totalCompanies;
-        // System.out.println("Length = " + length + "\n\n");
+        //System.out.println("Length = " + length + "\n\n");
         int length2;
         String[] line;
         for (int i = 0; i < length; i++) {
             line = order[i].split(",");
             length2 = line.length;
-            /*
-            System.out.println("Length2 = " + length2 + "-----------------------------------");
-            System.out.println("Iteration = " + (i + 1));
-            */
+            
+            //System.out.println("Length2 = " + length2 + "-----------------------------------");
+            //System.out.println("Iteration = " + (i + 1));
+            
             for (int j = 0; j < length2; j++) {
                 varyIndex = firstFreeTableIndex;
                 //System.out.println("Line[" + j + "] = " + line[j]);
